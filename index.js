@@ -5,6 +5,9 @@
  * 3. Make these calculations robust such that the calculation does not give an incorrect result, it throws an error to the user if something has gone wrong (parameter used with an incorrect unit of measurement, etc)
  */
 
+const CONVERSION_FACTOR_FOR_SECONDS_TO_HOURS = 3.6;
+const CONVERSION_FACTOR_FOR_MS2_TO_KMH = 3600;
+
 // Given Parameters
 //The information is placed inside and object for easier access, readability and to avoid using variable declaration redundantly
 const spacecraftProperties = {
@@ -36,12 +39,12 @@ function calculateNewVelocity(_spacecraftProperties) {
   ) {
     throw new Error("Check if all parameters are numbers");
   }
-  const accelerationInKmh = acceleration * (3.6 * 3600); //This decimal converts m/s^2 into km/h to match the measurement unit for velocity.
-  return initialVelocity + (accelerationInKmh * timeInSeconds) / 3600;
+  const accelerationInKmh = acceleration * (timeInSeconds*CONVERSION_FACTOR_FOR_SECONDS_TO_HOURS); //This decimal converts m/s^2 into km/h to match the measurement unit for velocity.
+  return initialVelocity + accelerationInKmh;
 }
 
 const endingDistance =
-  initialDistance + initialVelocity * (timeInSeconds / 3600); //calcultes new distance. Divides the time by 3600 to convert it to hours to match the km/h of the velocity
+  initialDistance + initialVelocity * (timeInSeconds / CONVERSION_FACTOR_FOR_MS2_TO_KMH); //calcultes new distance. Divides the time by 3600 to convert it to hours to match the km/h of the velocity
 const remainingFuel = startingFuel - fuelBurningRate * timeInSeconds; //calculates remaining fuel by subtracting the burnt fuel and its time from what was initially there.
 const updatedVelocity = calculateNewVelocity(spacecraftProperties); //calculates new velocity based on acceleration.  The order in this argument matchest the order in the paramenters for correct value assignment. Otherwise, when run, values for initialVelocity would be assigned to the acceleration, causing errors.
 
