@@ -18,7 +18,7 @@ const spacecraftProperties = {
   startingFuel: 5000, // remaining fuel (kg)
   fuelBurningRate: 0.5, // fuel burn rate (kg/s)
 };
-
+//Variables declared again to avoid having to use the key everytime.
 const {
   initialVelocity,
   acceleration,
@@ -35,10 +35,19 @@ function calculateNewVelocity(_spacecraftProperties) {
   if (
     typeof initialVelocity !== "number" ||
     typeof acceleration !== "number" ||
-    typeof timeInSeconds !== "number"
+    typeof timeInSeconds !== "number" 
   ) {
-    throw new Error("Check if all parameters are numbers");
+    throw new Error("Check if all parameters are numbers")
   }
+
+  if (fuelBurningRate <= 0) {
+    throw new Error("fuelBurningRate must be a positive number");
+  }
+  
+  if (remainingFuel < 0) {
+    throw new Error("Fuel consumption exceeds available fuel");
+  }
+
   const accelerationInKmh = acceleration * (timeInSeconds*CONVERSION_FACTOR_FOR_SECONDS_TO_HOURS); //This decimal converts m/s^2 into km/h to match the measurement unit for velocity.
   return initialVelocity + accelerationInKmh;
 }
